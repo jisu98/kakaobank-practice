@@ -15,7 +15,6 @@ class BookmarkViewModel @Inject constructor(
     private val getBookmarksUseCase: GetBookmarksUseCase,
     private val toggleBookmarkUseCase: ToggleBookmarkUseCase,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<UiState<List<MediaItem>>>(UiState.Loading)
     val uiState: StateFlow<UiState<List<MediaItem>>> = _uiState
 

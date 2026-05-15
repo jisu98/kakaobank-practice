@@ -17,7 +17,6 @@ class SearchViewModel @Inject constructor(
     private val searchMediaUseCase: SearchMediaUseCase,
     private val toggleBookmarkUseCase: ToggleBookmarkUseCase,
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<UiState<List<MediaItem>>>(UiState.Idle)
     val uiState: StateFlow<UiState<List<MediaItem>>> = _uiState
 

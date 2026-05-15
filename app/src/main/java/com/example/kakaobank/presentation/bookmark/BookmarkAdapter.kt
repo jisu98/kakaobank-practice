@@ -14,7 +14,6 @@ import com.example.kakaobank.domain.model.MediaType
 class BookmarkAdapter(
     private val onBookmarkClick: (MediaItem) -> Unit,
 ) : ListAdapter<MediaItem, BookmarkAdapter.ViewHolder>(DiffCallback()) {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemMediaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -26,7 +25,6 @@ class BookmarkAdapter(
 
     inner class ViewHolder(private val binding: ItemMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(item: MediaItem) {
             Glide.with(binding.root)
                 .load(item.imageUrl)
