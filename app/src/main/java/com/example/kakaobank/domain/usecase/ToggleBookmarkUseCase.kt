@@ -10,6 +10,7 @@ class ToggleBookmarkUseCase @Inject constructor(
     operator fun invoke(item: MediaItem): Boolean {
         val bookmarks = bookmarkRepository.getBookmarks().toMutableList()
         val existing = bookmarks.find { it.imageUrl == item.imageUrl }
+
         return if (existing != null) {
             bookmarks.remove(existing)
             bookmarkRepository.saveBookmarks(bookmarks)
