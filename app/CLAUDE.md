@@ -181,6 +181,7 @@ app/src/main/java/com/example/kakaobank/
 - 함수 하나는 한 가지 일만
 - 새 기능 추가 시 기존 레이어 규칙을 반드시 준수
 - 레이어 경계를 넘는 의존성 추가 시 이 파일 확인 후 진행
+- companion object는 맨 아래로 빼기
 - 함수 파라미터, 컬렉션, enum 등 여러 줄로 늘어지는 목록에는 trailing comma 사용
   ```kotlin
   // Good
