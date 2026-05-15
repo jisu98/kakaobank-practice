@@ -12,10 +12,6 @@ class BookmarkLocalDataSource @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson,
 ) {
-    companion object {
-        private const val KEY_BOOKMARKS = "bookmarks"
-    }
-
     fun getBookmarks(): List<MediaItem> {
         val json = sharedPreferences.getString(KEY_BOOKMARKS, null) ?: return emptyList()
         val type = object : TypeToken<List<MediaItem>>() {}.type
@@ -26,5 +22,9 @@ class BookmarkLocalDataSource @Inject constructor(
         sharedPreferences.edit()
             .putString(KEY_BOOKMARKS, gson.toJson(bookmarks))
             .apply()
+    }
+
+    companion object {
+        private const val KEY_BOOKMARKS = "bookmarks"
     }
 }
