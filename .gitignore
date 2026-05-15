@@ -1,0 +1,49 @@
+# Android
+*.apk
+*.aab
+*.ap_
+*.dex
+/bin/
+/gen/
+/out/
+.navigation/
+
+# Gradle
+.gradle/
+build/
+/app/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# Local
+local.properties
+*.properties
+
+# IntelliJ / Android Studio
+*.iml
+.idea/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries
+.idea/libraries
+.idea/caches
+*.iws
+/out
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Keystore (보안)
+*.jks
+*.keystore
+*.pfx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Kotlin
+*.class
