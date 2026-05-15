@@ -9,7 +9,6 @@ import javax.inject.Inject
 class SearchRepositoryImpl @Inject constructor(
     private val api: KakaoSearchApi,
 ) : ISearchRepository {
-
     override suspend fun searchImages(query: String, page: Int, size: Int): List<MediaItem> =
         api.searchImages(query = query, page = page, size = size).documents.map { doc ->
             MediaItem(

@@ -1,6 +1,7 @@
 package com.example.kakaobank.data.local
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.example.kakaobank.domain.model.MediaItem
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -19,9 +20,9 @@ class BookmarkLocalDataSource @Inject constructor(
     }
 
     fun saveBookmarks(bookmarks: List<MediaItem>) {
-        sharedPreferences.edit()
-            .putString(KEY_BOOKMARKS, gson.toJson(bookmarks))
-            .apply()
+        sharedPreferences.edit {
+            putString(KEY_BOOKMARKS, gson.toJson(bookmarks))
+        }
     }
 
     companion object {

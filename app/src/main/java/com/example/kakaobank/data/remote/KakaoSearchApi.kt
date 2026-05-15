@@ -9,16 +9,22 @@ interface KakaoSearchApi {
     @GET("v2/search/image")
     suspend fun searchImages(
         @Query("query") query: String,
-        @Query("sort") sort: String = "recency",
-        @Query("page") page: Int = 1,
-        @Query("size") size: Int = 30,
+        @Query("sort") sort: String = DEFAULT_SORT,
+        @Query("page") page: Int = DEFAULT_PAGE,
+        @Query("size") size: Int = DEFAULT_SIZE,
     ): ImageSearchResponse
 
     @GET("v2/search/vclip")
     suspend fun searchVideos(
         @Query("query") query: String,
-        @Query("sort") sort: String = "recency",
-        @Query("page") page: Int = 1,
-        @Query("size") size: Int = 30,
+        @Query("sort") sort: String = DEFAULT_SORT,
+        @Query("page") page: Int = DEFAULT_PAGE,
+        @Query("size") size: Int = DEFAULT_SIZE,
     ): VideoSearchResponse
+
+    companion object {
+        const val DEFAULT_SORT = "recency"
+        const val DEFAULT_PAGE = 1
+        const val DEFAULT_SIZE = 30
+    }
 }
