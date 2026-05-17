@@ -38,18 +38,27 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
             onQueryChange = { query = it },
             onSearch = { viewModel.search(query) },
         )
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+        ) {
             when (val state = uiState) {
                 is UiState.Idle -> Text(
                     text = "검색어를 입력해주세요",
                     modifier = Modifier.align(Alignment.Center),
                 )
-                is UiState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+
+                is UiState.Loading -> CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                )
+
                 is UiState.Success -> MediaGrid(
                     items = state.data,
                     onBookmarkClick = viewModel::toggleBookmark,
                     modifier = Modifier.fillMaxSize(),
                 )
+
                 is UiState.Error -> Text(
                     text = state.message,
                     modifier = Modifier.align(Alignment.Center),

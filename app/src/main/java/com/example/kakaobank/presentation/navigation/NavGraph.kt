@@ -31,6 +31,7 @@ fun KakaoBankNavGraph() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -39,11 +40,19 @@ fun KakaoBankNavGraph() {
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
                             navController.navigate(screen.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
                                 launchSingleTop = true
                                 restoreState = true
                             }
                         },
-                        icon = { Icon(painter = painterResource(screen.iconRes), contentDescription = screen.label) },
+                        icon = {
+                            Icon(
+                                painter = painterResource(screen.iconRes),
+                                contentDescription = screen.label,
+                            )
+                        },
                         label = { Text(screen.label) },
                     )
                 }
