@@ -29,12 +29,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.kakaobank.domain.model.MediaItem
 import com.example.kakaobank.presentation.UiState
 import com.example.kakaobank.presentation.component.MediaGrid
 
 @Composable
 fun SearchScreen(
-    onItemClick: (String) -> Unit,
+    onItemClick: (MediaItem) -> Unit,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

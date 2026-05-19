@@ -10,12 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.kakaobank.domain.model.MediaItem
 import com.example.kakaobank.presentation.UiState
 import com.example.kakaobank.presentation.component.MediaGrid
 
 @Composable
 fun BookmarkScreen(
-    onItemClick: (String) -> Unit,
+    onItemClick: (MediaItem) -> Unit,
     viewModel: BookmarkViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

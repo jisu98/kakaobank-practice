@@ -18,9 +18,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.kakaobank.R
+import com.example.kakaobank.domain.model.MediaItem
 import com.example.kakaobank.presentation.bookmark.BookmarkScreen
 import com.example.kakaobank.presentation.detail.DetailScreen
 import com.example.kakaobank.presentation.search.SearchScreen
+import com.google.gson.Gson
 
 private data class BottomNavItem(val screen: Screen, val label: String, val iconRes: Int)
 
@@ -35,8 +37,8 @@ fun KakaoBankNavGraph() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val showBottomBar = bottomNavItems.any { currentDestination?.hierarchy?.any { d -> d.route == it.screen.route } == true }
-    val onItemClick: (String) -> Unit = { imageUrl ->
-        navController.navigate(Screen.Detail.createRoute(imageUrl))
+    val onItemClick: (MediaItem) -> Unit = { item ->
+        navController.navigate(Screen.Detail.createRoute(item))
     }
 
     Scaffold(
@@ -76,11 +78,12 @@ fun KakaoBankNavGraph() {
             }
             composable(
                 route = Screen.Detail.route,
-                arguments = listOf(navArgument(Screen.Detail.ARG_IMAGE_URL) { type = NavType.StringType }),
+                arguments = listOf(navArgument(Screen.Detail.ARG_MEDIA_ITEM) { type = NavType.StringType }),
             ) { backStackEntry ->
-                val imageUrl = backStackEntry.arguments?.getString(Screen.Detail.ARG_IMAGE_URL).orEmpty()
+                val json = backStackEntry.arguments?.getString(Screen.Detail.ARG_MEDIA_ITEM).orEmpty()
+                val item = Gson().fromJson(json, MediaItem::class.java)
                 DetailScreen(
-                    imageUrl = imageUrl,
+                    item = item,
                     onBack = { navController.popBackStack() },
                 )
             }

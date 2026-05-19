@@ -39,7 +39,7 @@ private const val LOAD_MORE_THRESHOLD = 4
 @Composable
 fun MediaGrid(
     items: List<MediaItem>,
-    onItemClick: (String) -> Unit,
+    onItemClick: (MediaItem) -> Unit,
     onBookmarkClick: (MediaItem) -> Unit,
     modifier: Modifier = Modifier,
     isPaginating: Boolean = false,
@@ -92,11 +92,11 @@ fun MediaGrid(
 @Composable
 private fun MediaCard(
     item: MediaItem,
-    onItemClick: (String) -> Unit,
+    onItemClick: (MediaItem) -> Unit,
     onBookmarkClick: (MediaItem) -> Unit,
 ) {
     Card(
-        onClick = { onItemClick(if (item.type == MediaType.IMAGE) item.imageUrl else item.videoUrl) },
+        onClick = { onItemClick(item) },
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth(),
