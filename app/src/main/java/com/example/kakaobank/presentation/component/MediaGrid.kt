@@ -11,6 +11,9 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -25,14 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.example.kakaobank.R
 import com.example.kakaobank.domain.model.MediaItem
 import com.example.kakaobank.domain.model.MediaType
+import com.example.kakaobank.presentation.ui.theme.KakaoYellowDark
 
 private const val LOAD_MORE_THRESHOLD = 4
 
@@ -124,11 +126,9 @@ private fun MediaCard(
                 modifier = Modifier.align(Alignment.TopEnd),
             ) {
                 Icon(
-                    painter = painterResource(
-                        if (item.isBookmarked) R.drawable.ic_bookmark_filled else R.drawable.ic_bookmark_outline,
-                    ),
+                    imageVector = if (item.isBookmarked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = KakaoYellowDark,
                 )
             }
         }
