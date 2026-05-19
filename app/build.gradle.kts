@@ -6,11 +6,37 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    jacoco
 }
 
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
     if (file.exists()) file.inputStream().use { load(it) }
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    group = "verification"
+    description = "Generate Jacoco coverage report"
+
+    dependsOn("testDebugUnitTest")
+    mustRunAfter("testDebugUnitTest")
+
+    reports {
+        html.required = true
+        html.outputLocation = layout.buildDirectory.dir("reports/jacoco/html")
+        xml.required = true
+        xml.outputLocation = layout.buildDirectory.file("reports/jacoco/jacoco.xml")
+    }
+
+    val fileFilter = listOf("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
+    val debugTree = fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+        include("**/domain/usecase/**")
+    }
+
+    sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(files("${project.projectDir}/../app/build/jacoco/testDebugUnitTest.exec"))
 }
 
 android {
@@ -36,6 +62,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableUnitTestCoverage = false
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -78,6 +107,8 @@ dependencies {
     implementation(libs.youtube.player)
     debugImplementation(libs.compose.ui.tooling)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
