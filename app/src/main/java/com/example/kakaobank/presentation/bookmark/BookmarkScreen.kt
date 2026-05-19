@@ -14,7 +14,10 @@ import com.example.kakaobank.presentation.UiState
 import com.example.kakaobank.presentation.component.MediaGrid
 
 @Composable
-fun BookmarkScreen(viewModel: BookmarkViewModel = hiltViewModel()) {
+fun BookmarkScreen(
+    onItemClick: (String) -> Unit,
+    viewModel: BookmarkViewModel = hiltViewModel(),
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LifecycleResumeEffect(Unit) {
         viewModel.loadBookmarks()
@@ -29,6 +32,7 @@ fun BookmarkScreen(viewModel: BookmarkViewModel = hiltViewModel()) {
             } else {
                 MediaGrid(
                     items = state.data,
+                    onItemClick = onItemClick,
                     onBookmarkClick = viewModel::removeBookmark,
                     modifier = Modifier.fillMaxSize(),
                 )

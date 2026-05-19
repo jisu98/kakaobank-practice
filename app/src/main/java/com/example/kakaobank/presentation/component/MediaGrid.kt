@@ -39,6 +39,7 @@ private const val LOAD_MORE_THRESHOLD = 4
 @Composable
 fun MediaGrid(
     items: List<MediaItem>,
+    onItemClick: (String) -> Unit,
     onBookmarkClick: (MediaItem) -> Unit,
     modifier: Modifier = Modifier,
     isPaginating: Boolean = false,
@@ -66,7 +67,11 @@ fun MediaGrid(
         modifier = modifier,
     ) {
         items(items, key = { it.imageUrl }) { item ->
-            MediaCard(item = item, onBookmarkClick = onBookmarkClick)
+            MediaCard(
+                item = item,
+                onItemClick = onItemClick,
+                onBookmarkClick = onBookmarkClick,
+            )
         }
         if (isPaginating) {
             item(span = { GridItemSpan(maxLineSpan) }) {
@@ -87,9 +92,11 @@ fun MediaGrid(
 @Composable
 private fun MediaCard(
     item: MediaItem,
+    onItemClick: (String) -> Unit,
     onBookmarkClick: (MediaItem) -> Unit,
 ) {
     Card(
+        onClick = { onItemClick(item.imageUrl) },
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth(),

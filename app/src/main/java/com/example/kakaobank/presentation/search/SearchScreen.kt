@@ -33,7 +33,10 @@ import com.example.kakaobank.presentation.UiState
 import com.example.kakaobank.presentation.component.MediaGrid
 
 @Composable
-fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
+fun SearchScreen(
+    onItemClick: (String) -> Unit,
+    viewModel: SearchViewModel = hiltViewModel(),
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isPaginating by viewModel.isPaginating.collectAsStateWithLifecycle()
     var query by remember { mutableStateOf("") }
@@ -61,6 +64,7 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
 
                 is UiState.Success -> MediaGrid(
                     items = state.data,
+                    onItemClick = onItemClick,
                     onBookmarkClick = viewModel::toggleBookmark,
                     modifier = Modifier.fillMaxSize(),
                     isPaginating = isPaginating,
