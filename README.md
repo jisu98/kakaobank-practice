@@ -15,7 +15,8 @@
 
 ### 보관함 화면
 - 보관한 아이템을 저장 순서대로 표시
-- 앱 재시작 후에도 보관 목록 유지
+- 아이템 선택 시 보관함 제거 (하트 아이콘으로 표시)
+- 아이템 클릭 시 상세화면으로 이동
 
 ### 상세화면
 - 이미지: 전체화면으로 표시
@@ -58,7 +59,7 @@ di/                 Hilt 모듈
 ### 주요 설계 결정
 
 **병렬 API 호출**
-이미지/동영상 검색을 `async { } + awaitAll()`로 동시 요청 후 `datetime` 기준 내림차순 정렬합니다.
+이미지/동영상 검색을 `async { }`로 동시 요청 후 각각 `.await()`로 결과를 합산하고 `datetime` 기준 내림차순 정렬합니다.
 
 **보관함 상태 동기화**
 `SearchViewModel`과 `BookmarkViewModel`이 동일한 `BookmarkRepository` 인스턴스를 Hilt로 주입받아 상태를 공유합니다.
@@ -77,16 +78,23 @@ di/                 Hilt 모듈
 app/src/main/java/com/example/kakaobank/
 ├── presentation/
 │   ├── MainActivity.kt
+│   ├── UiState.kt
 │   ├── search/
 │   │   ├── SearchScreen.kt
-│   │   ├── SearchViewModel.kt
-│   │   └── SearchAdapter.kt
+│   │   └── SearchViewModel.kt
 │   ├── bookmark/
 │   │   ├── BookmarkScreen.kt
-│   │   ├── BookmarkViewModel.kt
-│   │   └── BookmarkAdapter.kt
-│   └── detail/
-│       └── DetailScreen.kt
+│   │   └── BookmarkViewModel.kt
+│   ├── detail/
+│   │   └── DetailScreen.kt
+│   ├── component/
+│   │   └── MediaGrid.kt
+│   ├── navigation/
+│   │   ├── NavGraph.kt
+│   │   └── Screen.kt
+│   └── ui/theme/
+│       ├── Color.kt
+│       └── Theme.kt
 ├── domain/
 │   ├── model/
 │   │   └── MediaItem.kt
@@ -157,8 +165,12 @@ KAKAO_API_KEY=your_kakao_rest_api_key
 |------|-------------|
 | `SearchMediaUseCase` | datetime 정렬, API 실패 시 예외 전파, 빈 결과 반환 |
 | `ToggleBookmarkUseCase` | 미보관 아이템 추가, 보관된 아이템 제거 |
-| `SearchViewModel` | 검색 상태 관리, 무한스크롤, 토글 동기화 |
-| `BookmarkViewModel` | 보관함 목록 조회, 토글 반영 |
+| `GetBookmarksUseCase` | savedAt 기준 정렬, 빈 목록 반환 |
+| `SearchViewModel` | 검색 상태 관리, 무한스크롤, 중복 제거, 토글 동기화 |
+| `BookmarkViewModel` | 보관함 목록 조회, 제거 후 목록 갱신 |
+| `SearchRepositoryImpl` | DTO → MediaItem 매핑 (이미지/동영상) |
+| `BookmarkRepositoryImpl` | LocalDataSource 위임 |
+| `BookmarkLocalDataSource` | JSON 직렬화 저장, 역직렬화 조회 |
 
 ---
 
@@ -174,8 +186,8 @@ KAKAO_API_KEY=your_kakao_rest_api_key
 
 ## 개발 환경
 
-- Android Studio Meerkat
-- Kotlin 1.9.x
+- Android Studio Otter 2 Feature Drop (2025.2.2)
+- Kotlin 2.0.21
 - minSdk 24
 - targetSdk 36
 - compileSdk 36
