@@ -9,6 +9,7 @@ import com.example.kakaobank.presentation.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,6 +18,7 @@ class SearchViewModel @Inject constructor(
     private val searchMediaUseCase: SearchMediaUseCase,
     private val toggleBookmarkUseCase: ToggleBookmarkUseCase,
 ) : ViewModel() {
+    private val _items = MutableStateFlow(LinkedHashMap<String, MediaItem>())
     private val _uiState = MutableStateFlow<UiState<List<MediaItem>>>(UiState.Idle)
     val uiState: StateFlow<UiState<List<MediaItem>>> = _uiState
 
@@ -33,13 +35,15 @@ class SearchViewModel @Inject constructor(
         lastQuery = query
         currentPage = 1
         isLastPage = false
+        _items.value = LinkedHashMap()
         _uiState.value = UiState.Loading
 
         viewModelScope.launch {
             runCatching { searchMediaUseCase(query, page = 1) }
                 .onSuccess { results ->
                     isLastPage = results.isEmpty()
-                    _uiState.value = UiState.Success(results)
+                    _items.value = results.toLinkedHashMap()
+                    _uiState.value = UiState.Success(_items.value.values.toList())
                 }
                 .onFailure { _uiState.value = UiState.Error(it.message ?: "오류가 발생했습니다.") }
         }
@@ -47,8 +51,7 @@ class SearchViewModel @Inject constructor(
 
     fun loadMore() {
         if (_isPaginating.value || isLastPage || lastQuery.isBlank()) return
-
-        val current = (_uiState.value as? UiState.Success)?.data ?: return
+        if (_uiState.value !is UiState.Success) return
 
         _isPaginating.value = true
 
@@ -57,7 +60,12 @@ class SearchViewModel @Inject constructor(
                 .onSuccess { results ->
                     currentPage++
                     isLastPage = results.isEmpty()
-                    _uiState.value = UiState.Success(current + results)
+                    _items.update { current ->
+                        LinkedHashMap(current).apply {
+                            results.forEach { put(it.thumbnailUrl, it) }
+                        }
+                    }
+                    _uiState.value = UiState.Success(_items.value.values.toList())
                 }
                 .onFailure { }
 
@@ -67,16 +75,14 @@ class SearchViewModel @Inject constructor(
 
     fun toggleBookmark(item: MediaItem) {
         val isNowBookmarked = toggleBookmarkUseCase(item)
-        val current = (_uiState.value as? UiState.Success)?.data ?: return
-
-        _uiState.value = UiState.Success(
-            current.map {
-                if (it.thumbnailUrl == item.thumbnailUrl) {
-                    it.copy(isBookmarked = isNowBookmarked)
-                } else {
-                    it
-                }
-            },
-        )
+        _items.update { current ->
+            LinkedHashMap(current).apply {
+                this[item.thumbnailUrl]?.let { this[item.thumbnailUrl] = it.copy(isBookmarked = isNowBookmarked) }
+            }
+        }
+        _uiState.value = UiState.Success(_items.value.values.toList())
     }
+
+    private fun List<MediaItem>.toLinkedHashMap(): LinkedHashMap<String, MediaItem> =
+        associateTo(LinkedHashMap()) { it.thumbnailUrl to it }
 }

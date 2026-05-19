@@ -94,6 +94,21 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun `given loadMore returns duplicate thumbnailUrl when loadMore then item is deduplicated`() {
+        val item = mediaItem("thumb1", isBookmarked = false)
+        val duplicate = mediaItem("thumb1", isBookmarked = true)
+        coEvery { searchMediaUseCase("kakao", 1, any()) } returns listOf(item)
+        coEvery { searchMediaUseCase("kakao", 2, any()) } returns listOf(duplicate)
+
+        viewModel.search("kakao")
+        viewModel.loadMore()
+
+        val state = viewModel.uiState.value as UiState.Success
+        assertEquals(1, state.data.size)
+        assertTrue(state.data.first().isBookmarked)
+    }
+
+    @Test
     fun `given bookmark when toggleBookmark then item isBookmarked is updated`() {
         val item = mediaItem("thumb1", isBookmarked = false)
         coEvery { searchMediaUseCase(any(), any(), any()) } returns listOf(item)
