@@ -31,7 +31,10 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     val fileFilter = listOf("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
     val debugTree = fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
         exclude(fileFilter)
-        include("**/domain/usecase/**")
+        include(
+            "**/domain/usecase/**",
+            "**/presentation/**/*ViewModel.class",
+        )
     }
 
     sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
