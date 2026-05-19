@@ -7,6 +7,10 @@ data class VideoSearchResponse(
 )
 
 data class VideoDocument(
-    @SerializedName("thumbnail") val thumbnail: String,
+    @SerializedName("title") val title: String,
+    @SerializedName("url") val url: String,
     @SerializedName("datetime") val datetime: String,
+    @SerializedName("play_time") val playTime: Int,
+    @SerializedName("thumbnail") val thumbnail: String,
+    @SerializedName("author") val author: String,
 )

@@ -71,7 +71,7 @@ class SearchViewModel @Inject constructor(
 
         _uiState.value = UiState.Success(
             current.map {
-                if (it.imageUrl == item.imageUrl) {
+                if (it.thumbnailUrl == item.thumbnailUrl) {
                     it.copy(isBookmarked = isNowBookmarked)
                 } else {
                     it

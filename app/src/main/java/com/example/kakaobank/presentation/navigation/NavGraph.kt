@@ -38,6 +38,7 @@ fun KakaoBankNavGraph() {
     val onItemClick: (String) -> Unit = { imageUrl ->
         navController.navigate(Screen.Detail.createRoute(imageUrl))
     }
+
     Scaffold(
         bottomBar = {
             if (showBottomBar) {

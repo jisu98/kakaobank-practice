@@ -66,7 +66,7 @@ fun MediaGrid(
         contentPadding = PaddingValues(4.dp),
         modifier = modifier,
     ) {
-        items(items, key = { it.imageUrl }) { item ->
+        items(items, key = { it.thumbnailUrl }) { item ->
             MediaCard(
                 item = item,
                 onItemClick = onItemClick,
@@ -96,14 +96,14 @@ private fun MediaCard(
     onBookmarkClick: (MediaItem) -> Unit,
 ) {
     Card(
-        onClick = { onItemClick(item.imageUrl) },
+        onClick = { onItemClick(if (item.type == MediaType.IMAGE) item.imageUrl else item.videoUrl) },
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth(),
     ) {
         Box {
             GlideImage(
-                model = item.imageUrl,
+                model = item.thumbnailUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()

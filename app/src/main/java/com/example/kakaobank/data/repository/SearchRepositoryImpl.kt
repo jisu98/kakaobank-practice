@@ -12,7 +12,8 @@ class SearchRepositoryImpl @Inject constructor(
     override suspend fun searchImages(query: String, page: Int, size: Int): List<MediaItem> =
         api.searchImages(query = query, page = page, size = size).documents.map { doc ->
             MediaItem(
-                imageUrl = doc.thumbnailUrl,
+                thumbnailUrl = doc.thumbnailUrl,
+                imageUrl = doc.imageUrl,
                 datetime = doc.datetime,
                 type = MediaType.IMAGE,
                 isBookmarked = false,
@@ -22,7 +23,8 @@ class SearchRepositoryImpl @Inject constructor(
     override suspend fun searchVideos(query: String, page: Int, size: Int): List<MediaItem> =
         api.searchVideos(query = query, page = page, size = size).documents.map { doc ->
             MediaItem(
-                imageUrl = doc.thumbnail,
+                thumbnailUrl = doc.thumbnail,
+                videoUrl = doc.url,
                 datetime = doc.datetime,
                 type = MediaType.VIDEO,
                 isBookmarked = false,

@@ -16,13 +16,13 @@ class SearchMediaUseCase @Inject constructor(
         page: Int = 1,
         size: Int = 30,
     ): List<MediaItem> = coroutineScope {
-        val bookmarkedUrls = bookmarkRepository.getBookmarks().map { it.imageUrl }.toSet()
+        val bookmarkedUrls = bookmarkRepository.getBookmarks().map { it.thumbnailUrl }.toSet()
 
         val imagesDeferred = async { searchRepository.searchImages(query, page, size) }
         val videosDeferred = async { searchRepository.searchVideos(query, page, size) }
 
         (imagesDeferred.await() + videosDeferred.await())
-            .map { it.copy(isBookmarked = it.imageUrl in bookmarkedUrls) }
+            .map { it.copy(isBookmarked = it.thumbnailUrl in bookmarkedUrls) }
             .sortedByDescending { it.datetime }
     }
 }
